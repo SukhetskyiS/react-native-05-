@@ -7,11 +7,12 @@ import {
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import Button from "../../src/components/Button";
 
-const CreatePostsScreen = () => {
+const CreatePostsScreen = ({ navigation }) => {
   const [hasCameraPermission, setHasCameraPermission] =
     useState(null);
   const [image, setImage] = useState(null);
@@ -21,6 +22,8 @@ const CreatePostsScreen = () => {
   const [flash, setFlash] = useState(
     Camera.Constants.FlashMode.off
   );
+  const [location, setLocation] = useState(null);
+
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -34,12 +37,27 @@ const CreatePostsScreen = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      let { status } =
+        await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg(
+          "Permission to access location was denied"
+        );
+        return;
+      }
+    })();
+  }, []);
+
   const takePicture = async () => {
     if (cameraRef) {
       try {
         const data =
           await cameraRef.current.takePictureAsync();
-        console.log(data);
+        let location =
+          await Location.getCurrentPositionAsync({});
+        setLocation(location);
         setImage(data.uri);
       } catch (err) {
         console.log(err);
@@ -53,6 +71,10 @@ const CreatePostsScreen = () => {
         await MediaLibrary.createAssetAsync(image);
         alert("Фото сохранено!");
         setImage(null);
+        navigation.navigate("DefaultScreen", {
+          image,
+          location,
+        });
       } catch (err) {
         console.log(err);
       }
