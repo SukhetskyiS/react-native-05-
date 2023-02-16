@@ -37,7 +37,12 @@ const Home = ({ navigation }) => {
           },
           tabBarLabel: "",
           tabBarIcon: ({ color }) => (
-            <Feather name="grid" size={24} color={color} />
+            <Feather
+              name="grid"
+              size={24}
+              color={color}
+              style={{ marginTop: 9 }}
+            />
           ),
           tabBarActiveTintColor: "#FF6C00",
           tabBarInActiveTintColor: "#212121",
@@ -87,7 +92,12 @@ const Home = ({ navigation }) => {
         options={{
           tabBarIconStyle: { marginRight: 90 },
           tabBarIcon: ({ color }) => (
-            <Feather name="user" size={24} color={color} />
+            <Feather
+              name="user"
+              size={24}
+              color={color}
+              style={{ marginTop: 9 }}
+            />
           ),
           tabBarActiveTintColor: "#FF6C00",
           tabBarInActiveTintColor: "#212121",
