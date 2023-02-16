@@ -1,34 +1,65 @@
-import React, { useEffect } from "react";
+import { StatusBar } from 'expo-status-bar'
+import { RegistrationScreen } from './Screens/Auth/RegistrationScreen'
+import { LoginScreen } from './Screens/Auth/LoginScreen'
+import { HomeScreen } from './Screens/Home/HomeScreen'
+import { useCallback } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import { NavigationContainer } from "@react-navigation/native";
+import { useFonts } from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
 
-import { useRoute } from "./router";
-
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+SplashScreen.preventAutoHideAsync()
+const Stack = createNativeStackNavigator()
 
 export default function App() {
-  const routing = useRoute(null);
+    const [fontsLoaded] = useFonts({
+        'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
+        'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
+    })
 
-  const [isLoaded] = useFonts({
-    "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
-  });
+    const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded) {
+            await SplashScreen.hideAsync()
+        }
+    }, [fontsLoaded])
 
-  useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
+    if (!fontsLoaded) {
+        return null
     }
-    prepare();
-  }, []);
 
-  if (!isLoaded) {
-    return undefined;
-  } else {
-    SplashScreen.hideAsync();
-  }
-
-  return (
-    <NavigationContainer>{routing}</NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator
+                screenOptions={{
+                    headerShown: false,
+                }}
+            >
+                <Stack.Screen name="Registration">
+                    {(props) => (
+                        <RegistrationScreen
+                            {...props}
+                            onLayoutRootView={onLayoutRootView}
+                        />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name="Login">
+                    {(props) => (
+                        <LoginScreen
+                            {...props}
+                            onLayoutRootView={onLayoutRootView}
+                        />
+                    )}
+                </Stack.Screen>
+                <Stack.Screen name="Home">
+                    {(props) => (
+                        <HomeScreen
+                            {...props}
+                            onLayoutRootView={onLayoutRootView}
+                        />
+                    )}
+                </Stack.Screen>
+            </Stack.Navigator>
+        </NavigationContainer>
+    )
 }

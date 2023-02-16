@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "test",
-    "slug": "test",
+    "name": "expoApp",
+    "slug": "expoApp",
     "version": "1.0.0",
-    "orientation": "default",
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
